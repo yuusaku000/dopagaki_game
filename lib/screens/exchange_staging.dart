@@ -59,8 +59,12 @@ class _ExchangeStagingState extends State<ExchangeStaging>
     return GestureDetector(
       onTap: _tap,
       child: Material(
-        color: Colors.black,
-        child: Stack(
+        // 他の画面と同じ横幅に収める
+        color: C.bg,
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 460),
+            child: Stack(
           children: [
             Positioned.fill(
               child: DecoratedBox(
@@ -88,6 +92,8 @@ class _ExchangeStagingState extends State<ExchangeStaging>
                     style: TextStyle(fontSize: 12, color: Color(0xFFC3A8DD))),
               ),
           ],
+        ),
+          ),
         ),
       ),
     );

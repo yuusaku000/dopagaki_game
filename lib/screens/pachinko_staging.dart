@@ -193,7 +193,6 @@ class StagingPlan {
   }
 }
 
-
 // =====================================================================
 // 演出画面
 // =====================================================================
@@ -811,8 +810,12 @@ class _PachinkoStagingState extends State<PachinkoStaging>
     return GestureDetector(
       onTap: _tap,
       child: Material(
-        color: Colors.black,
-        child: ScreenShake(
+        // 他の画面と同じく、横幅は460までに収める
+        color: C.bg,
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 460),
+            child: ScreenShake(
           active: _shakeScreen,
           intensity: _shakePower + _spinUpCount * 1.0,
           child: Stack(
@@ -890,6 +893,8 @@ class _PachinkoStagingState extends State<PachinkoStaging>
             if (_blackout) const Positioned.fill(child: BlackoutOverlay()),
           ],
         ),
+        ),
+          ),
         ),
       ),
     );
@@ -1236,6 +1241,26 @@ class _PachinkoStagingState extends State<PachinkoStaging>
               '頭脳 ${_s(r.card!.brain)}　ドパ欲 +${r.card!.dopa}　人間性 ${_s(r.card!.human)}',
               style: const TextStyle(fontSize: 12, color: Color(0xFFC3A8DD)),
             ),
+            // かぶりでも大当たり。報酬がかけらになるだけ。
+            if (r.isDuplicate) ...[
+              const SizedBox(height: 14),
+              const Text('所持済み → 🧩 ×3',
+                  style: TextStyle(
+                      fontSize: 15,
+                      color: Color(0xFFFFCF8A),
+                      fontWeight: FontWeight.w900)),
+              const SizedBox(height: 4),
+              Text('かけら ${widget.fragments} / 10',
+                  style: const TextStyle(
+                      fontSize: 12, color: Color(0xFFFFCF8A))),
+            ] else ...[
+              const SizedBox(height: 12),
+              const Text('NEW！',
+                  style: TextStyle(
+                      fontSize: 15,
+                      color: Color(0xFFFF9EC2),
+                      fontWeight: FontWeight.w900)),
+            ],
           ] else if (r.kind == PullKind.part) ...[
             const Text('パーツ解放',
                 style: TextStyle(
@@ -1252,9 +1277,9 @@ class _PachinkoStagingState extends State<PachinkoStaging>
                     fontWeight: FontWeight.w900,
                     color: Color(0xFFDCD2EA))),
           ] else ...[
-            Text(
-              r.kind == PullKind.duplicate ? 'SD カード' : 'D カード',
-              style: const TextStyle(
+            const Text(
+              'D カード',
+              style: TextStyle(
                   fontSize: 20,
                   color: Color(0xFF9DC0FF),
                   fontWeight: FontWeight.w900),
@@ -1268,9 +1293,9 @@ class _PachinkoStagingState extends State<PachinkoStaging>
                     fontWeight: FontWeight.w900,
                     color: Color(0xFF9DC0FF))),
             const SizedBox(height: 16),
-            Text(
-              r.kind == PullKind.duplicate ? 'すでに所持済み' : 'Dカードは最初から編成可能',
-              style: const TextStyle(
+            const Text(
+              'Dカードは最初から編成可能',
+              style: TextStyle(
                   fontSize: 13,
                   color: Color(0xFFFFCF8A),
                   fontWeight: FontWeight.w800),

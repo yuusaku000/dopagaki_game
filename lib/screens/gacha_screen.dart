@@ -212,7 +212,7 @@ class _GachaScreenState extends State<GachaScreen> {
                   ? '🎰'
                   : last!.isHit
                       ? '✨'
-                      : last!.isFragment
+                      : last!.kind == PullKind.dCard
                           ? '🧩'
                           : '🎁',
               style: const TextStyle(fontSize: 48),
@@ -304,7 +304,7 @@ class _GachaScreenState extends State<GachaScreen> {
   /// 引いたものの見た目
   Widget _preview(PullResult r) {
     if (r.card != null) {
-      return Text(r.isFragment ? '🧩' : '🃏',
+      return Text(r.kind == PullKind.dCard ? '🧩' : '🃏',
           style: const TextStyle(fontSize: 28));
     }
     final key = r.partKey!;
@@ -401,7 +401,7 @@ class _GachaScreenState extends State<GachaScreen> {
           ),
           const SizedBox(height: 12),
 
-          // 実際に「新しいSDカード」が手に入る確率。集めるほど下がる。
+          // 大当たり率は一定。かぶっても大当たり演出は出る。
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 9),
             decoration: BoxDecoration(
@@ -409,35 +409,52 @@ class _GachaScreenState extends State<GachaScreen> {
               border: Border.all(color: const Color(0xFF5C4620)),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Row(
+            child: Column(
               children: [
-                const Text('新しいSDが出る確率',
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: Color(0xFFFFCF8A),
-                        fontWeight: FontWeight.bold)),
-                const Spacer(),
-                Text(
-                  yet == 0 ? '— （全種所持）' : '${newPct.toStringAsFixed(1)}%',
-                  style: const TextStyle(
-                      fontSize: 13,
-                      color: Color(0xFFFFCF8A),
-                      fontWeight: FontWeight.w900),
+                Row(
+                  children: [
+                    const Text('大当たり率',
+                        style: TextStyle(
+                            fontSize: 12.5,
+                            color: Color(0xFFFFCF8A),
+                            fontWeight: FontWeight.bold)),
+                    const Spacer(),
+                    Text('$sdPct%',
+                        style: const TextStyle(
+                            fontSize: 15,
+                            color: Color(0xFFFFCF8A),
+                            fontWeight: FontWeight.w900)),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Row(
+                  children: [
+                    const Text('うち 新規カード',
+                        style: TextStyle(fontSize: 11.5, color: C.sub)),
+                    const Spacer(),
+                    Text(
+                      yet == 0 ? '— （全種所持）' : '${newPct.toStringAsFixed(1)}%',
+                      style: const TextStyle(
+                          fontSize: 12,
+                          color: C.sub,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
           const SizedBox(height: 6),
           Text(
-            '未所持 $yet種 ／ 所持済みを引くと 🧩かけら3個 になるため、\n'
-            '集まるほど新規入手率は下がります',
+            '未所持 $yet種 ／ かぶっても大当たり演出は出ます。\n'
+            '報酬が 🧩かけら3個 に変わるだけです。',
             style: const TextStyle(fontSize: 10.5, color: C.sub, height: 1.7),
           ),
 
           const SizedBox(height: 11),
           const Text(
             '・Dカードは最初から編成できるため、出ると 🧩かけら1個 になります\n'
-            '・所持済みのSDカードを引くと 🧩かけら3個 になります\n'
+            '・所持済みのSDカードでも大当たり。報酬が 🧩かけら3個 になります\n'
             '・🧩10個でSDカード1枚と交換できます（未所持を優先）\n'
             '・パーツを全解放すると、パーツ枠はSDカードに置き換わります',
             style: TextStyle(fontSize: 11, color: C.sub, height: 1.85),

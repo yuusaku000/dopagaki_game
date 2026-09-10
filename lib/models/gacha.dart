@@ -30,7 +30,14 @@ class PullResult {
     required this.note,
   });
 
-  bool get isHit => kind == PullKind.sdCard;
+  /// SD枠を引けば、かぶりでも大当たり扱い。
+  /// 大当たりの確率を一定に保つため、新規かどうかは判定に含めない。
+  bool get isHit =>
+      kind == PullKind.sdCard || kind == PullKind.duplicate;
+
+  /// かぶりは大当たりだが、報酬はかけらになる
+  bool get isDuplicate => kind == PullKind.duplicate;
+
   bool get isFragment =>
       kind == PullKind.dCard || kind == PullKind.duplicate;
 

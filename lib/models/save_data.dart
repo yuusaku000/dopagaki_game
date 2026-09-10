@@ -156,7 +156,7 @@ class SaveData extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_key);
     _applyDefaults();
-    tickets = 5;
+    tickets = 999;
     fragments = 0;
     bestFloor = 0;
     activeDeck = 0;
