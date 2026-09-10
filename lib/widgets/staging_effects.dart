@@ -152,7 +152,8 @@ class PushButton extends StatefulWidget {
 }
 
 class _PushButtonState extends State<PushButton>
-    with SingleTickerProviderStateMixin {
+    // AnimationController を2つ使うので Single ではないほうを使う
+    with TickerProviderStateMixin {
   late final AnimationController _gauge = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 1200),
@@ -168,6 +169,13 @@ class _PushButtonState extends State<PushButton>
     _gauge.dispose();
     _bounce.dispose();
     super.dispose();
+  }
+
+  /// 画面の狭いほうに合わせてボタンを大きくする
+  double get _size {
+    final m = MediaQuery.of(context).size;
+    final base = m.shortestSide;
+    return (base * 0.42).clamp(120.0, 200.0);
   }
 
   @override
@@ -203,8 +211,8 @@ class _PushButtonState extends State<PushButton>
               child: GestureDetector(
                 onTap: widget.onPush,
                 child: Container(
-                  width: 132,
-                  height: 132,
+                  width: _size,
+                  height: _size,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
@@ -219,9 +227,9 @@ class _PushButtonState extends State<PushButton>
                           blurRadius: 34)
                     ],
                   ),
-                  child: const Text('PUSH',
+                  child: Text('PUSH',
                       style: TextStyle(
-                          fontSize: 26,
+                          fontSize: _size * 0.2,
                           fontWeight: FontWeight.w900,
                           letterSpacing: 2,
                           color: Colors.white)),
